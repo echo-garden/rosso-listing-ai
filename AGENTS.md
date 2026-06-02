@@ -21,6 +21,20 @@ The goal is to keep requirements, tasks, logs, prompts, and code inside the proj
 - Update tasks/done.md when a task is completed.
 - If there are uncertainties, make reasonable assumptions and proceed unless the decision is dangerous or business-critical.
 
+
+## Git Policy
+
+- Run git status before making changes.
+- Create a feature branch for each task.
+- Use short, descriptive English branch names.
+- Commit changes after completing each meaningful task.
+- Use short, descriptive English commit messages.
+- Do not create huge commits that mix unrelated changes.
+- Push the feature branch to remote after committing.
+- Create a pull request for review.
+- Do not push directly to main.
+- Do not merge pull requests unless explicitly instructed by the user.
+
 ## Work Rules
 
 1. Run git status.
@@ -29,11 +43,17 @@ The goal is to keep requirements, tasks, logs, prompts, and code inside the proj
 4. Read tasks/current.md.
 5. Summarize the current task.
 6. Create a short plan.
-7. Implement the task.
-8. Run checks or tests when possible.
-9. Summarize changed files.
-10. Record the work in logs/ai-worklog.md.
-11. Suggest the next task.
+7. Create a feature branch.
+8. Implement the task.
+9. Run checks or tests when possible.
+10. Summarize changed files.
+11. Record the work in logs/ai-worklog.md.
+12. Update tasks/done.md if the task is completed.
+13. Commit changes.
+14. Push the feature branch.
+15. Create a pull request.
+16. Suggest the next task.
+
 
 ## Safety Rules
 
@@ -41,6 +61,10 @@ The goal is to keep requirements, tasks, logs, prompts, and code inside the proj
 - Do not modify production data directly.
 - Do not expose credentials.
 - Do not deploy to production without explicit confirmation.
+- Do not push directly to main.
+- Do not merge pull requests without explicit confirmation.
+- Do not overwrite user-created files without checking their contents first.
+
 
 ## Preferred Output Style
 
@@ -55,3 +79,10 @@ The goal is to keep requirements, tasks, logs, prompts, and code inside the proj
 - Keep code, commands, file names, branch names, commit messages, and technical identifiers in English.
 - Explain plans, summaries, risks, and next steps in Japanese.
 - If the user writes in Japanese, reply in Japanese.
+
+
+## Dependency Policy
+
+- Do not introduce new frameworks, databases, paid services, or major dependencies without explaining why.
+- If a new dependency is necessary, document the reason.
+- Prefer simple, maintainable solutions over complex architectures.
