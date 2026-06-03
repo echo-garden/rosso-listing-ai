@@ -17,3 +17,11 @@ Created project structure for rosso-listing-ai.
 - Found Next.js Server Actions rejected the request with Body exceeded 1 MB limit.
 - Increased serverActions.bodySizeLimit to 20mb in next.config.mjs.
 - Restarted Docker Compose and verified npm run typecheck and npm run lint.
+
+## 2026-06-03 Fix product detail route params
+
+- Investigated blank page after product registration.
+- Found Next.js 16 dynamic params were being read synchronously, causing product detail lookup with id undefined.
+- Updated product detail, edit, generate, and generated-content routes to await params.
+- Added allowedDevOrigins for the current IP-based development access.
+- Verified npm run typecheck, npm run lint, docker compose up -d --build, /products 200, and product detail 200.

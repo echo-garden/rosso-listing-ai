@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import { generateListingContent } from "@/lib/ai/generate";
 import { prisma } from "@/lib/prisma";
 
-export async function POST(_request: Request, { params }: { params: { id: string } }) {
+export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   const product = await prisma.product.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { images: true }
   });
 

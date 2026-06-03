@@ -10,11 +10,14 @@ export default async function ProductDetailPage({
   params,
   searchParams
 }: {
-  params: { id: string };
-  searchParams: { mock?: string };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ mock?: string }>;
 }) {
+  const { id } = await params;
+  const { mock } = await searchParams;
+
   const product = await prisma.product.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       images: { orderBy: { sortOrder: "asc" } },
       generatedContent: true
@@ -30,7 +33,7 @@ export default async function ProductDetailPage({
         action={<SecondaryLink href={`/products/${product.id}/edit`}>Edit</SecondaryLink>}
       />
 
-      {searchParams.mock === "1" ? (
+      {mock === "1" ? (
         <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm font-semibold text-amber-900">
           OPENAI_API_KEY is missing. Mock generated content was used.
         </div>

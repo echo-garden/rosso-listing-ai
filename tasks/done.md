@@ -15,3 +15,7 @@ Completed a working end-to-end MVP for Rosso Listing AI.
 ## Fix: Product Image Save Limit
 
 Resolved image-upload product save failure by increasing the Next.js Server Actions body size limit to 20mb.
+
+## Fix: Product Detail Blank Page
+
+Resolved product detail blank/500 page by awaiting Next.js dynamic route params and allowing the current development origin.
