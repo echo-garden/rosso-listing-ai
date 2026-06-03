@@ -25,3 +25,10 @@ Created project structure for rosso-listing-ai.
 - Updated product detail, edit, generate, and generated-content routes to await params.
 - Added allowedDevOrigins for the current IP-based development access.
 - Verified npm run typecheck, npm run lint, docker compose up -d --build, /products 200, and product detail 200.
+
+## 2026-06-03 Fix generated content value normalization
+
+- Investigated Generate AI content failure.
+- Found OpenAI returned arrays/numbers for fields stored as strings in Prisma.
+- Updated AI prompt to request string values and normalized generated values before saving.
+- Verified npm run typecheck, npm run lint, docker compose up -d --build, generate API 303, product detail 200, and generated content persisted.

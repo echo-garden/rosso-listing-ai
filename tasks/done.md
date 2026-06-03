@@ -19,3 +19,7 @@ Resolved image-upload product save failure by increasing the Next.js Server Acti
 ## Fix: Product Detail Blank Page
 
 Resolved product detail blank/500 page by awaiting Next.js dynamic route params and allowing the current development origin.
+
+## Fix: Generated Content Save Error
+
+Resolved AI generation save failure by normalizing OpenAI output values to strings before Prisma writes.

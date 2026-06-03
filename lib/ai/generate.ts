@@ -35,7 +35,7 @@ export async function generateListingContent(product: ProductWithImages): Promis
       },
       {
         role: "user",
-        content: `Create JSON with keys mercariTitle, mercariDescription, instagramCaption, onlineStoreDescription, hashtags, priceSuggestion, conditionText, checkPoints, riskWarnings.
+        content: `Create JSON with keys mercariTitle, mercariDescription, instagramCaption, onlineStoreDescription, hashtags, priceSuggestion, conditionText, checkPoints, riskWarnings. All values must be strings, not arrays, numbers, or objects.
 
 Product:
 ${JSON.stringify(
@@ -63,7 +63,11 @@ ${JSON.stringify(
     return { content: buildMockContent(product), mockMode: true };
   }
 
-  return { content: normalizeGeneratedContent(JSON.parse(raw)), mockMode: false };
+  try {
+    return { content: normalizeGeneratedContent(JSON.parse(raw)), mockMode: false };
+  } catch {
+    return { content: buildMockContent(product), mockMode: true };
+  }
 }
 
 function buildMockContent(product: ProductWithImages): GeneratedListingContent {
@@ -85,16 +89,27 @@ function buildMockContent(product: ProductWithImages): GeneratedListingContent {
   };
 }
 
-function normalizeGeneratedContent(value: Partial<GeneratedListingContent>): GeneratedListingContent {
+function normalizeGeneratedContent(value: Partial<Record<keyof GeneratedListingContent, unknown>>): GeneratedListingContent {
   return {
-    mercariTitle: value.mercariTitle ?? "",
-    mercariDescription: value.mercariDescription ?? "",
-    instagramCaption: value.instagramCaption ?? "",
-    onlineStoreDescription: value.onlineStoreDescription ?? "",
-    hashtags: value.hashtags ?? "",
-    priceSuggestion: value.priceSuggestion ?? "",
-    conditionText: value.conditionText ?? "",
-    checkPoints: value.checkPoints ?? "",
-    riskWarnings: value.riskWarnings ?? ""
+    mercariTitle: stringifyGeneratedValue(value.mercariTitle),
+    mercariDescription: stringifyGeneratedValue(value.mercariDescription),
+    instagramCaption: stringifyGeneratedValue(value.instagramCaption),
+    onlineStoreDescription: stringifyGeneratedValue(value.onlineStoreDescription),
+    hashtags: stringifyGeneratedValue(value.hashtags),
+    priceSuggestion: stringifyGeneratedValue(value.priceSuggestion),
+    conditionText: stringifyGeneratedValue(value.conditionText),
+    checkPoints: stringifyGeneratedValue(value.checkPoints),
+    riskWarnings: stringifyGeneratedValue(value.riskWarnings)
   };
+}
+
+function stringifyGeneratedValue(value: unknown): string {
+  if (value == null) return "";
+  if (Array.isArray(value)) {
+    return value.map((item) => stringifyGeneratedValue(item)).filter(Boolean).join("\n");
+  }
+  if (typeof value === "object") {
+    return JSON.stringify(value);
+  }
+  return String(value);
 }

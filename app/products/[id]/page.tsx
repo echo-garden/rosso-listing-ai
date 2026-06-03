@@ -35,7 +35,7 @@ export default async function ProductDetailPage({
 
       {mock === "1" ? (
         <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm font-semibold text-amber-900">
-          OPENAI_API_KEY is missing. Mock generated content was used.
+          Mock generated content was used. Check OpenAI API settings if this was unexpected.
         </div>
       ) : null}
 
