@@ -11,3 +11,7 @@ Completed a working end-to-end MVP for Rosso Listing AI.
 - Editable generated content and copy buttons
 - Settings placeholders
 - Docker Compose app/db setup
+
+## Fix: Product Image Save Limit
+
+Resolved image-upload product save failure by increasing the Next.js Server Actions body size limit to 20mb.
