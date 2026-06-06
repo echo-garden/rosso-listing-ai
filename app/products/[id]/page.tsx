@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GeneratedContentForm } from "@/components/generated-content-form";
@@ -42,7 +42,7 @@ export default async function ProductDetailPage({
       <div className="mb-4 grid grid-cols-2 gap-2">
         {product.images.map((image) => (
           <div key={image.id} className="relative aspect-square overflow-hidden rounded-md bg-zinc-100">
-            <Image src={image.url} alt="" fill className="object-cover" sizes="50vw" />
+            <img src={image.url} alt="" className="h-full w-full object-cover" />
           </div>
         ))}
       </div>

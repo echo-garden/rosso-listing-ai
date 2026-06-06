@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { PageTitle } from "@/components/ui";
 import { prisma } from "@/lib/prisma";
@@ -29,7 +29,7 @@ export default async function ProductsPage() {
           return (
             <Link key={product.id} href={`/products/${product.id}`} className="flex gap-3 rounded-md border border-zinc-200 p-3">
               <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-md bg-zinc-100">
-                {image ? <Image src={image.url} alt="" fill className="object-cover" sizes="96px" /> : null}
+                {image ? <img src={image.url} alt="" className="h-full w-full object-cover" /> : null}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate font-bold">{product.generatedContent?.mercariTitle ?? product.title ?? product.productType}</p>
