@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GeneratedContentForm } from "@/components/generated-content-form";
+import { ProductAnalysisPanel } from "@/components/product-analysis-panel";
 import { Card, PageTitle, SecondaryLink } from "@/components/ui";
 import { prisma } from "@/lib/prisma";
 import { PRODUCT_STATUS_LABELS } from "@/lib/status";
@@ -11,16 +12,17 @@ export default async function ProductDetailPage({
   searchParams
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ mock?: string }>;
+  searchParams: Promise<{ mock?: string; analysisMock?: string }>;
 }) {
   const { id } = await params;
-  const { mock } = await searchParams;
+  const { mock, analysisMock } = await searchParams;
 
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
       images: { orderBy: { sortOrder: "asc" } },
-      generatedContent: true
+      generatedContent: true,
+      analysis: true
     }
   });
 
@@ -39,10 +41,19 @@ export default async function ProductDetailPage({
         </div>
       ) : null}
 
+      {analysisMock === "1" ? (
+        <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm font-semibold text-amber-900">
+          Mock image analysis was used. Check OpenAI API settings if this was unexpected.
+        </div>
+      ) : null}
+
       <div className="mb-4 grid grid-cols-2 gap-2">
         {product.images.map((image) => (
           <div key={image.id} className="relative aspect-square overflow-hidden rounded-md bg-zinc-100">
             <img src={image.url} alt="" className="h-full w-full object-cover" />
+            <span className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-xs font-bold text-white">
+              {IMAGE_ROLE_LABELS[image.imageRole] ?? image.imageRole}
+            </span>
           </div>
         ))}
       </div>
@@ -66,6 +77,8 @@ export default async function ProductDetailPage({
         ) : null}
       </Card>
 
+      <ProductAnalysisPanel productId={product.id} analysis={product.analysis} />
+
       <form action={`/api/products/${product.id}/generate`} method="post" className="mt-4">
         <button className="min-h-12 w-full rounded-md bg-rosso-600 px-4 py-2 text-sm font-bold text-white" type="submit">
           Generate AI content
@@ -88,6 +101,12 @@ export default async function ProductDetailPage({
     </div>
   );
 }
+
+const IMAGE_ROLE_LABELS: Record<string, string> = {
+  product: "Product",
+  tag: "Tag",
+  detail: "Detail"
+};
 
 function Info({ label, value }: { label: string; value: string }) {
   return (

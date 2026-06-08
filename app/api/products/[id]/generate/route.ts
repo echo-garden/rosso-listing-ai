@@ -7,7 +7,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
 
   const product = await prisma.product.findUnique({
     where: { id },
-    include: { images: true }
+    include: { images: true, analysis: true }
   });
 
   if (!product) {

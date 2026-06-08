@@ -23,12 +23,20 @@ export function ProductForm({
         <Input name="images" type="file" accept="image/*" multiple />
       </Field>
 
+      <Field label="Tag / size images">
+        <Input name="tagImages" type="file" accept="image/*" multiple />
+      </Field>
+
+      <Field label="Damage / logo images">
+        <Input name="detailImages" type="file" accept="image/*" multiple />
+      </Field>
+
       <Field label="Product type">
-        <Input name="productType" required defaultValue={product?.productType ?? ""} placeholder="キャラT、スニーカーなど" />
+        <Input name="productType" defaultValue={product?.productType === "未分類" ? "" : product?.productType ?? ""} placeholder="キャラT、スニーカーなど" />
       </Field>
 
       <Field label="Condition">
-        <Input name="condition" required defaultValue={product?.condition ?? ""} placeholder="目立つ傷なし、使用感ありなど" />
+        <Input name="condition" defaultValue={product?.condition === "未確認" ? "" : product?.condition ?? ""} placeholder="目立つ傷なし、使用感ありなど" />
       </Field>
 
       <div className="grid grid-cols-2 gap-3">

@@ -2,26 +2,21 @@
 
 ## Goal
 
-Create the initial MVP structure for Rosso&Nero Listing Assistant.
+Review the image analysis autofill pull request.
 
-## Scope
+## Status
 
-- Create basic app structure
-- Create product registration screen
-- Create simple product list screen
-- Create placeholder generator UI for Mercari, Instagram, and online store descriptions
+Implementation is complete on `feature/image-analysis-autofill`.
 
-## Out of Scope
+## Scope Completed
 
-- Actual Mercari API integration
-- Login system
-- Payment system
-- Production deployment
+- Analyze uploaded product, tag, and detail images.
+- Store product analysis candidates with confidence values.
+- Suggest product type, brand candidates, character, size, color, condition, tags, and price.
+- Autofill empty/default product fields after image upload.
+- Let staff manually apply analysis candidates.
+- Use saved image analysis in listing text generation.
 
-## Completion Criteria
+## Next Step
 
-- App can be started locally
-- Product data can be entered
-- Generated text area exists for each platform
-- Worklog is updated
-- Changes are committed- 
+- Review and merge the pull request when approved.
