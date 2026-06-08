@@ -74,3 +74,9 @@ Created project structure for rosso-listing-ai.
 - Added sourceSnapshot storage so the confirmed data can be traced back to product, analysis, generated content, and image URLs.
 - Added a Mercari Shops input mapper that only uses ConfirmedListing data and requires externally accessible image URLs.
 - Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, and product detail 200.
+
+## 2026-06-08 Suppress extension hydration warning
+
+- Investigated a hydration mismatch caused by a browser extension adding `cz-shortcut-listen` to the body element.
+- Added `suppressHydrationWarning` to the app body element to avoid noisy extension-injected attribute warnings.
+- Verified npm run typecheck and npm run lint.
