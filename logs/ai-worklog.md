@@ -32,3 +32,9 @@ Created project structure for rosso-listing-ai.
 - Found OpenAI returned arrays/numbers for fields stored as strings in Prisma.
 - Updated AI prompt to request string values and normalized generated values before saving.
 - Verified npm run typecheck, npm run lint, docker compose up -d --build, generate API 303, product detail 200, and generated content persisted.
+
+## 2026-06-08 Update master PR workflow
+
+- Updated AGENTS.md to treat `master` as the default base branch.
+- Clarified that task branches should be created from `master` and pull requests should target `master`.
+- Replaced direct-push warnings from `main` to `master`.
