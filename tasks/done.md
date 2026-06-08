@@ -23,3 +23,7 @@ Resolved product detail blank/500 page by awaiting Next.js dynamic route params 
 ## Fix: Generated Content Save Error
 
 Resolved AI generation save failure by normalizing OpenAI output values to strings before Prisma writes.
+
+## Update: Master PR Workflow
+
+Updated project agent instructions so new task branches are created from `master` and pull requests target `master`.
