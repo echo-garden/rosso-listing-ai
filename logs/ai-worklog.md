@@ -51,3 +51,9 @@ Created project structure for rosso-listing-ai.
 - Added conservative price estimate fallback and lightweight brand catalog normalization.
 - Updated listing generation to use saved image analysis candidates while keeping human review and authenticity warnings.
 - Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, /products 200, /products/new 200, and analyze API 303.
+
+## 2026-06-08 Prevent duplicate product submits
+
+- Added a pending submit button for product forms.
+- Disabled the save button while the server action is running and changed the button text to show saving/analyzing progress.
+- Verified npm run typecheck and npm run lint.

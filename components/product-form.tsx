@@ -1,5 +1,6 @@
 import type { Product } from "@prisma/client";
-import { Button, Field, Input, Select, Textarea } from "@/components/ui";
+import { SubmitButton } from "@/components/submit-button";
+import { Field, Input, Select, Textarea } from "@/components/ui";
 import { PRODUCT_STATUS_OPTIONS } from "@/lib/status";
 
 export function ProductForm({
@@ -91,9 +92,9 @@ export function ProductForm({
       ) : null}
 
       <div className="sticky bottom-16 bg-white py-3">
-        <Button type="submit" className="w-full">
+        <SubmitButton className="w-full" pendingLabel="Saving and analyzing...">
           Save product
-        </Button>
+        </SubmitButton>
       </div>
     </form>
   );
