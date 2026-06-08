@@ -23,3 +23,7 @@ Resolved product detail blank/500 page by awaiting Next.js dynamic route params 
 ## Fix: Generated Content Save Error
 
 Resolved AI generation save failure by normalizing OpenAI output values to strings before Prisma writes.
+
+## Fix: Product List Blank Page
+
+Reduced blank/slow product list rendering risk by serving local uploaded product images directly instead of routing them through Next image optimization.

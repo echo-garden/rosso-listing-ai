@@ -32,3 +32,11 @@ Created project structure for rosso-listing-ai.
 - Found OpenAI returned arrays/numbers for fields stored as strings in Prisma.
 - Updated AI prompt to request string values and normalized generated values before saving.
 - Verified npm run typecheck, npm run lint, docker compose up -d --build, generate API 303, product detail 200, and generated content persisted.
+
+## 2026-06-07 Fix product list blank page
+
+- Investigated the products page blank page report.
+- Confirmed /products exists and returns 200 HTML with product data.
+- Replaced Next image usage for local upload thumbnails on product list and detail pages with direct img tags to avoid local image optimization delays/issues in dev.
+- Rebuilt the Docker app container and verified /products, product detail, and uploaded image URLs return 200.
+- Verified npm run typecheck and npm run lint.
