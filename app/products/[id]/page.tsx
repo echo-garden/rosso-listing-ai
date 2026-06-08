@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ConfirmedListingForm } from "@/components/confirmed-listing-form";
 import { GeneratedContentForm } from "@/components/generated-content-form";
 import { ProductAnalysisPanel } from "@/components/product-analysis-panel";
 import { Card, PageTitle, SecondaryLink } from "@/components/ui";
@@ -22,7 +23,8 @@ export default async function ProductDetailPage({
     include: {
       images: { orderBy: { sortOrder: "asc" } },
       generatedContent: true,
-      analysis: true
+      analysis: true,
+      confirmedListing: true
     }
   });
 
@@ -98,6 +100,8 @@ export default async function ProductDetailPage({
           <p className="rounded-md border border-zinc-200 p-4 text-sm text-zinc-600">Generate content to edit and copy listing text.</p>
         )}
       </section>
+
+      <ConfirmedListingForm product={product} />
     </div>
   );
 }

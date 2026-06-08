@@ -27,6 +27,7 @@ model Product {
   images               ProductImage[]
   generatedContent     GeneratedContent?
   analysis             ProductAnalysis?
+  confirmedListing     ConfirmedListing?
 }
 
 model ProductImage {
@@ -86,6 +87,29 @@ model ProductAnalysis {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   product               Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ConfirmedListing {
+  id                      String   @id @default(cuid())
+  productId               String   @unique
+  title                   String
+  description             String
+  price                   Int
+  condition               String
+  categoryId              String?
+  shippingConfigurationId String?
+  imageUrls               Json
+  stock                   Int      @default(1)
+  confirmedBy             String?
+  confirmedAt             DateTime @default(now())
+  sourceSnapshot          Json?
+  mercariReady            Boolean  @default(false)
+  mercariSubmittedAt      DateTime?
+  mercariProductId        String?
+  mercariStatus           String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  product                 Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model AppSetting {

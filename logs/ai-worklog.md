@@ -65,3 +65,12 @@ Created project structure for rosso-listing-ai.
 - Updated manual Analyze images to regenerate listing content after refreshing image analysis.
 - Added ProductAnalysis referenceSources debug storage and displayed Debug references on the detail page.
 - Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, analyze API 303, ProductAnalysis referenceSources persistence, and generated content refresh.
+
+## 2026-06-08 Confirmed listing for Mercari Shops
+
+- Added ConfirmedListing storage for human-confirmed listing data.
+- Added a Confirmed listing form on product detail, prefilled from Product and GeneratedContent.
+- Added a server action to save confirmed title, description, price, condition, category, shipping configuration, image URLs, stock, and confirmation metadata.
+- Added sourceSnapshot storage so the confirmed data can be traced back to product, analysis, generated content, and image URLs.
+- Added a Mercari Shops input mapper that only uses ConfirmedListing data and requires externally accessible image URLs.
+- Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, and product detail 200.

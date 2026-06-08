@@ -1,6 +1,7 @@
 "use server";
 
 import { ProductStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -112,6 +113,82 @@ export async function applyProductAnalysis(productId: string) {
   redirect(`/products/${productId}`);
 }
 
+export async function confirmListing(productId: string, formData: FormData) {
+  const title = requiredString(formData, "title");
+  const description = requiredString(formData, "description");
+  const price = optionalInt(formData, "price");
+  const condition = requiredString(formData, "condition");
+  const categoryId = optionalString(formData, "categoryId");
+  const shippingConfigurationId = optionalString(formData, "shippingConfigurationId");
+  const stock = optionalInt(formData, "stock") ?? 1;
+  const confirmedBy = optionalString(formData, "confirmedBy");
+  const imageUrls = parseLines(requiredString(formData, "imageUrls"));
+
+  if (price == null || price <= 0) {
+    throw new Error("price is required");
+  }
+
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    include: {
+      images: { orderBy: { sortOrder: "asc" } },
+      generatedContent: true,
+      analysis: true
+    }
+  });
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  const mercariReady = Boolean(
+    title &&
+      description &&
+      price > 0 &&
+      condition &&
+      categoryId &&
+      shippingConfigurationId &&
+      imageUrls.length > 0 &&
+      imageUrls.every(isExternalUrl) &&
+      stock > 0
+  );
+
+  await prisma.confirmedListing.upsert({
+    where: { productId },
+    create: {
+      productId,
+      title,
+      description,
+      price,
+      condition,
+      categoryId,
+      shippingConfigurationId,
+      imageUrls: toJsonValue(imageUrls),
+      stock,
+      confirmedBy,
+      sourceSnapshot: toJsonValue(buildConfirmedSourceSnapshot(product)),
+      mercariReady
+    },
+    update: {
+      title,
+      description,
+      price,
+      condition,
+      categoryId,
+      shippingConfigurationId,
+      imageUrls: toJsonValue(imageUrls),
+      stock,
+      confirmedBy,
+      confirmedAt: new Date(),
+      sourceSnapshot: toJsonValue(buildConfirmedSourceSnapshot(product)),
+      mercariReady
+    }
+  });
+
+  revalidatePath(`/products/${productId}`);
+  redirect(`/products/${productId}`);
+}
+
 async function saveImages(productId: string, values: FormDataEntryValue[], imageRole: string) {
   const files = values.filter((value): value is File => value instanceof File && value.size > 0);
   if (files.length === 0) return 0;
@@ -130,4 +207,46 @@ async function saveImages(productId: string, values: FormDataEntryValue[], image
   });
 
   return files.length;
+}
+
+function parseLines(value: string) {
+  return value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function isExternalUrl(value: string) {
+  return value.startsWith("http://") || value.startsWith("https://");
+}
+
+function toJsonValue(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value ?? null)) as Prisma.InputJsonValue;
+}
+
+type ConfirmedSourceProduct = Prisma.ProductGetPayload<{
+  include: {
+    images: true;
+    generatedContent: true;
+    analysis: true;
+  };
+}>;
+
+function buildConfirmedSourceSnapshot(product: ConfirmedSourceProduct) {
+  return {
+    product: {
+      id: product.id,
+      title: product.title,
+      productType: product.productType,
+      condition: product.condition,
+      brandName: product.brandName,
+      characterName: product.characterName,
+      size: product.size,
+      color: product.color,
+      salePrice: product.salePrice
+    },
+    generatedContent: product.generatedContent,
+    analysis: product.analysis,
+    imageUrls: product.images.map((image) => image.url)
+  };
 }
