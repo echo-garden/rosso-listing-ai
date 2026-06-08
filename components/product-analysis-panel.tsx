@@ -8,6 +8,13 @@ type BrandCandidate = {
   reason?: string;
 };
 
+type ReferenceSource = {
+  label?: string;
+  type?: string;
+  url?: string | null;
+  note?: string;
+};
+
 export function ProductAnalysisPanel({
   productId,
   analysis
@@ -60,6 +67,7 @@ export function ProductAnalysisPanel({
           {analysis.warnings ? <TextBlock label="Warnings" value={analysis.warnings} /> : null}
 
           <BrandCandidates value={analysis.brandCandidates} />
+          <ReferenceSources value={analysis.referenceSources} />
 
           <form action={applyAction}>
             <Button type="submit" className="w-full">
@@ -73,6 +81,32 @@ export function ProductAnalysisPanel({
         </p>
       )}
     </Card>
+  );
+}
+
+function ReferenceSources({ value }: { value: unknown }) {
+  const sources = Array.isArray(value) ? (value as ReferenceSource[]) : [];
+  if (sources.length === 0) return null;
+
+  return (
+    <div className="border-t border-zinc-200 pt-3">
+      <p className="text-xs font-semibold uppercase text-zinc-500">Debug references</p>
+      <div className="mt-2 space-y-2">
+        {sources.map((source, index) => (
+          <div key={`${source.label}-${index}`} className="rounded-md bg-zinc-50 p-2 text-sm">
+            <p className="font-semibold">{source.label ?? source.type ?? "Reference"}</p>
+            {source.url ? (
+              <a href={source.url} className="mt-1 block break-all text-rosso-700 underline">
+                {source.url}
+              </a>
+            ) : (
+              <p className="mt-1 text-zinc-600">URLなし</p>
+            )}
+            {source.note ? <p className="mt-1 text-zinc-600">{source.note}</p> : null}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

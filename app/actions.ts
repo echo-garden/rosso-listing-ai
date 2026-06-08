@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { applySavedAnalysisToProduct } from "@/lib/products/apply-analysis";
 import { runAndSaveProductAnalysis } from "@/lib/products/analyze-product";
+import { generateAndSaveListingContent } from "@/lib/products/generate-content";
 import { storage } from "@/lib/storage";
 
 function optionalString(formData: FormData, key: string) {
@@ -50,12 +51,16 @@ export async function createProduct(formData: FormData) {
     (await saveImages(product.id, formData.getAll("tagImages"), "tag")) +
     (await saveImages(product.id, formData.getAll("detailImages"), "detail"));
   const analysisResult = imageCount > 0 ? await runAndSaveProductAnalysis(product.id) : null;
+  const url = new URL(`/products/${product.id}`, process.env.APP_URL ?? "http://localhost:3000");
   if (analysisResult) {
     await applySavedAnalysisToProduct(product.id);
+    const generated = await generateAndSaveListingContent(product.id);
+    if (analysisResult.mockMode) url.searchParams.set("analysisMock", "1");
+    if (generated.mockMode) url.searchParams.set("mock", "1");
   }
 
   revalidatePath("/products");
-  redirect(`/products/${product.id}${analysisResult?.mockMode ? "?analysisMock=1" : ""}`);
+  redirect(`${url.pathname}${url.search}`);
 }
 
 export async function updateProduct(productId: string, formData: FormData) {
@@ -85,13 +90,17 @@ export async function updateProduct(productId: string, formData: FormData) {
     (await saveImages(productId, formData.getAll("tagImages"), "tag")) +
     (await saveImages(productId, formData.getAll("detailImages"), "detail"));
   const analysisResult = imageCount > 0 ? await runAndSaveProductAnalysis(productId) : null;
+  const url = new URL(`/products/${productId}`, process.env.APP_URL ?? "http://localhost:3000");
   if (analysisResult) {
     await applySavedAnalysisToProduct(productId);
+    const generated = await generateAndSaveListingContent(productId);
+    if (analysisResult.mockMode) url.searchParams.set("analysisMock", "1");
+    if (generated.mockMode) url.searchParams.set("mock", "1");
   }
 
   revalidatePath(`/products/${productId}`);
   revalidatePath("/products");
-  redirect(`/products/${productId}${analysisResult?.mockMode ? "?analysisMock=1" : ""}`);
+  redirect(`${url.pathname}${url.search}`);
 }
 
 export async function applyProductAnalysis(productId: string) {

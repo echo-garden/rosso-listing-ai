@@ -57,3 +57,11 @@ Created project structure for rosso-listing-ai.
 - Added a pending submit button for product forms.
 - Disabled the save button while the server action is running and changed the button text to show saving/analyzing progress.
 - Verified npm run typecheck and npm run lint.
+
+## 2026-06-08 Auto-generate content after image analysis
+
+- Added a shared generated-content save helper.
+- Updated product create/edit flows to run image analysis, safe autofill, and generated content creation together after image upload.
+- Updated manual Analyze images to regenerate listing content after refreshing image analysis.
+- Added ProductAnalysis referenceSources debug storage and displayed Debug references on the detail page.
+- Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, analyze API 303, ProductAnalysis referenceSources persistence, and generated content refresh.

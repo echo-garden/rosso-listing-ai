@@ -80,6 +80,7 @@ model ProductAnalysis {
   recommendedPrice      Int?
   priceReason           String?
   warnings              String?
+  referenceSources      Json?
   rawJson               Json?
   mockMode              Boolean  @default(false)
   createdAt             DateTime @default(now())

@@ -92,7 +92,7 @@ export function ProductForm({
       ) : null}
 
       <div className="sticky bottom-16 bg-white py-3">
-        <SubmitButton className="w-full" pendingLabel="Saving and analyzing...">
+        <SubmitButton className="w-full" pendingLabel="Saving, analyzing, and generating...">
           Save product
         </SubmitButton>
       </div>
