@@ -40,3 +40,14 @@ Created project structure for rosso-listing-ai.
 - Replaced Next image usage for local upload thumbnails on product list and detail pages with direct img tags to avoid local image optimization delays/issues in dev.
 - Rebuilt the Docker app container and verified /products, product detail, and uploaded image URLs return 200.
 - Verified npm run typecheck and npm run lint.
+
+## 2026-06-08 Image analysis autofill milestones
+
+- Added ProductAnalysis storage for image-derived product candidates, confidence scores, brand candidates, tags, warnings, and price estimates.
+- Added AI image analysis using product, tag, and detail image roles with local upload files passed as data URLs for OpenAI vision input.
+- Added mock analysis fallback when OPENAI_API_KEY is missing.
+- Added automatic image analysis after new product image upload, with safe autofill for empty/default product fields only.
+- Added product detail analysis panel with Analyze images and Apply candidates actions.
+- Added conservative price estimate fallback and lightweight brand catalog normalization.
+- Updated listing generation to use saved image analysis candidates while keeping human review and authenticity warnings.
+- Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, /products 200, /products/new 200, and analyze API 303.

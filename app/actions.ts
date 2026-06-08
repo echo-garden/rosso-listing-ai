@@ -4,6 +4,8 @@ import { ProductStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { applySavedAnalysisToProduct } from "@/lib/products/apply-analysis";
+import { runAndSaveProductAnalysis } from "@/lib/products/analyze-product";
 import { storage } from "@/lib/storage";
 
 function optionalString(formData: FormData, key: string) {
@@ -31,8 +33,8 @@ function requiredString(formData: FormData, key: string) {
 export async function createProduct(formData: FormData) {
   const product = await prisma.product.create({
     data: {
-      productType: requiredString(formData, "productType"),
-      condition: requiredString(formData, "condition"),
+      productType: optionalString(formData, "productType") ?? "未分類",
+      condition: optionalString(formData, "condition") ?? "未確認",
       brandName: optionalString(formData, "brandName"),
       characterName: optionalString(formData, "characterName"),
       size: optionalString(formData, "size"),
@@ -43,9 +45,17 @@ export async function createProduct(formData: FormData) {
     }
   });
 
-  await saveImages(product.id, formData.getAll("images"));
+  const imageCount =
+    (await saveImages(product.id, formData.getAll("images"), "product")) +
+    (await saveImages(product.id, formData.getAll("tagImages"), "tag")) +
+    (await saveImages(product.id, formData.getAll("detailImages"), "detail"));
+  const analysisResult = imageCount > 0 ? await runAndSaveProductAnalysis(product.id) : null;
+  if (analysisResult) {
+    await applySavedAnalysisToProduct(product.id);
+  }
+
   revalidatePath("/products");
-  redirect(`/products/${product.id}`);
+  redirect(`/products/${product.id}${analysisResult?.mockMode ? "?analysisMock=1" : ""}`);
 }
 
 export async function updateProduct(productId: string, formData: FormData) {
@@ -55,8 +65,8 @@ export async function updateProduct(productId: string, formData: FormData) {
     where: { id: productId },
     data: {
       title: optionalString(formData, "title"),
-      productType: requiredString(formData, "productType"),
-      condition: requiredString(formData, "condition"),
+      productType: optionalString(formData, "productType") ?? "未分類",
+      condition: optionalString(formData, "condition") ?? "未確認",
       brandName: optionalString(formData, "brandName"),
       characterName: optionalString(formData, "characterName"),
       size: optionalString(formData, "size"),
@@ -70,15 +80,32 @@ export async function updateProduct(productId: string, formData: FormData) {
     }
   });
 
-  await saveImages(productId, formData.getAll("images"));
+  const imageCount =
+    (await saveImages(productId, formData.getAll("images"), "product")) +
+    (await saveImages(productId, formData.getAll("tagImages"), "tag")) +
+    (await saveImages(productId, formData.getAll("detailImages"), "detail"));
+  const analysisResult = imageCount > 0 ? await runAndSaveProductAnalysis(productId) : null;
+  if (analysisResult) {
+    await applySavedAnalysisToProduct(productId);
+  }
+
   revalidatePath(`/products/${productId}`);
+  revalidatePath("/products");
+  redirect(`/products/${productId}${analysisResult?.mockMode ? "?analysisMock=1" : ""}`);
+}
+
+export async function applyProductAnalysis(productId: string) {
+  await applySavedAnalysisToProduct(productId, { overwrite: true });
+
+  revalidatePath(`/products/${productId}`);
+  revalidatePath(`/products/${productId}/edit`);
   revalidatePath("/products");
   redirect(`/products/${productId}`);
 }
 
-async function saveImages(productId: string, values: FormDataEntryValue[]) {
+async function saveImages(productId: string, values: FormDataEntryValue[], imageRole: string) {
   const files = values.filter((value): value is File => value instanceof File && value.size > 0);
-  if (files.length === 0) return;
+  if (files.length === 0) return 0;
 
   const existingCount = await prisma.productImage.count({ where: { productId } });
   const saved = await Promise.all(files.map((file) => storage.save(file)));
@@ -88,7 +115,10 @@ async function saveImages(productId: string, values: FormDataEntryValue[]) {
       productId,
       url: file.url,
       storageKey: file.storageKey,
+      imageRole,
       sortOrder: existingCount + index
     }))
   });
+
+  return files.length;
 }

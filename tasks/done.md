@@ -27,3 +27,7 @@ Resolved AI generation save failure by normalizing OpenAI output values to strin
 ## Fix: Product List Blank Page
 
 Reduced blank/slow product list rendering risk by serving local uploaded product images directly instead of routing them through Next image optimization.
+
+## Feature: Image Analysis Autofill
+
+Implemented image-based product analysis and autofill milestones 1-7: analysis storage, AI image extraction, tag/detail image roles, price estimates, brand candidate normalization, generated-content integration, safe automatic autofill after image upload, and manual candidate application.
