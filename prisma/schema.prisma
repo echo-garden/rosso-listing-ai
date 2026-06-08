@@ -26,6 +26,8 @@ model Product {
   updatedAt            DateTime          @updatedAt
   images               ProductImage[]
   generatedContent     GeneratedContent?
+  analysis             ProductAnalysis?
+  confirmedListing     ConfirmedListing?
 }
 
 model ProductImage {
@@ -33,6 +35,7 @@ model ProductImage {
   productId String
   url       String
   storageKey String
+  imageRole String   @default("product")
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -55,6 +58,58 @@ model GeneratedContent {
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
   product                Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductAnalysis {
+  id                    String   @id @default(cuid())
+  productId             String   @unique
+  productType           String?
+  productTypeConfidence Float?
+  brandName             String?
+  brandConfidence       Float?
+  brandCandidates       Json?
+  characterName         String?
+  characterConfidence   Float?
+  size                  String?
+  sizeConfidence        Float?
+  color                 String?
+  colorConfidence       Float?
+  conditionSummary      String?
+  tags                  String?
+  priceMin              Int?
+  priceMax              Int?
+  recommendedPrice      Int?
+  priceReason           String?
+  warnings              String?
+  referenceSources      Json?
+  rawJson               Json?
+  mockMode              Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  product               Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ConfirmedListing {
+  id                      String   @id @default(cuid())
+  productId               String   @unique
+  title                   String
+  description             String
+  price                   Int
+  condition               String
+  categoryId              String?
+  shippingConfigurationId String?
+  imageUrls               Json
+  stock                   Int      @default(1)
+  confirmedBy             String?
+  confirmedAt             DateTime @default(now())
+  sourceSnapshot          Json?
+  mercariReady            Boolean  @default(false)
+  mercariSubmittedAt      DateTime?
+  mercariProductId        String?
+  mercariStatus           String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  product                 Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model AppSetting {

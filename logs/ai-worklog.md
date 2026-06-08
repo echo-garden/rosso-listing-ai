@@ -40,3 +40,43 @@ Created project structure for rosso-listing-ai.
 - Replaced Next image usage for local upload thumbnails on product list and detail pages with direct img tags to avoid local image optimization delays/issues in dev.
 - Rebuilt the Docker app container and verified /products, product detail, and uploaded image URLs return 200.
 - Verified npm run typecheck and npm run lint.
+
+## 2026-06-08 Image analysis autofill milestones
+
+- Added ProductAnalysis storage for image-derived product candidates, confidence scores, brand candidates, tags, warnings, and price estimates.
+- Added AI image analysis using product, tag, and detail image roles with local upload files passed as data URLs for OpenAI vision input.
+- Added mock analysis fallback when OPENAI_API_KEY is missing.
+- Added automatic image analysis after new product image upload, with safe autofill for empty/default product fields only.
+- Added product detail analysis panel with Analyze images and Apply candidates actions.
+- Added conservative price estimate fallback and lightweight brand catalog normalization.
+- Updated listing generation to use saved image analysis candidates while keeping human review and authenticity warnings.
+- Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, /products 200, /products/new 200, and analyze API 303.
+
+## 2026-06-08 Prevent duplicate product submits
+
+- Added a pending submit button for product forms.
+- Disabled the save button while the server action is running and changed the button text to show saving/analyzing progress.
+- Verified npm run typecheck and npm run lint.
+
+## 2026-06-08 Auto-generate content after image analysis
+
+- Added a shared generated-content save helper.
+- Updated product create/edit flows to run image analysis, safe autofill, and generated content creation together after image upload.
+- Updated manual Analyze images to regenerate listing content after refreshing image analysis.
+- Added ProductAnalysis referenceSources debug storage and displayed Debug references on the detail page.
+- Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, analyze API 303, ProductAnalysis referenceSources persistence, and generated content refresh.
+
+## 2026-06-08 Confirmed listing for Mercari Shops
+
+- Added ConfirmedListing storage for human-confirmed listing data.
+- Added a Confirmed listing form on product detail, prefilled from Product and GeneratedContent.
+- Added a server action to save confirmed title, description, price, condition, category, shipping configuration, image URLs, stock, and confirmation metadata.
+- Added sourceSnapshot storage so the confirmed data can be traced back to product, analysis, generated content, and image URLs.
+- Added a Mercari Shops input mapper that only uses ConfirmedListing data and requires externally accessible image URLs.
+- Verified npx prisma generate, npm run typecheck, npm run lint, docker compose up -d --build app, and product detail 200.
+
+## 2026-06-08 Suppress extension hydration warning
+
+- Investigated a hydration mismatch caused by a browser extension adding `cz-shortcut-listen` to the body element.
+- Added `suppressHydrationWarning` to the app body element to avoid noisy extension-injected attribute warnings.
+- Verified npm run typecheck and npm run lint.
