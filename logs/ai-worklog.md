@@ -38,3 +38,8 @@ Created project structure for rosso-listing-ai.
 - Updated AGENTS.md to treat `master` as the default base branch.
 - Clarified that task branches should be created from `master` and pull requests should target `master`.
 - Replaced direct-push warnings from `main` to `master`.
+
+## 2026-06-09 Configure Codex full access
+
+- Added project-level Codex config for this trusted repository.
+- Set approval policy to never and sandbox mode to danger-full-access.

@@ -27,3 +27,7 @@ Resolved AI generation save failure by normalizing OpenAI output values to strin
 ## Update: Master PR Workflow
 
 Updated project agent instructions so new task branches are created from `master` and pull requests target `master`.
+
+## Config: Codex Full Access
+
+Added project-level Codex settings so trusted sessions use `danger-full-access` with `approval_policy = "never"`.
