@@ -67,7 +67,6 @@ export function ConfirmedListingForm({ product }: { product: ProductForConfirmat
         <Field label="Image URLs">
           <Textarea name="imageUrls" required rows={4} defaultValue={imageUrls.join("\n")} />
         </Field>
-        <p className="-mt-2 text-xs text-zinc-500">メルカリShops送信には外部から取得できる http(s) の画像URLが必要です。</p>
 
         <Field label="Confirmed by">
           <Input name="confirmedBy" defaultValue={confirmed?.confirmedBy ?? ""} placeholder="staff name" />

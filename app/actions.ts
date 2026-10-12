@@ -141,17 +141,7 @@ export async function confirmListing(productId: string, formData: FormData) {
     throw new Error("Product not found");
   }
 
-  const mercariReady = Boolean(
-    title &&
-      description &&
-      price > 0 &&
-      condition &&
-      categoryId &&
-      shippingConfigurationId &&
-      imageUrls.length > 0 &&
-      imageUrls.every(isExternalUrl) &&
-      stock > 0
-  );
+  const mercariReady = Boolean(title && description && price > 0 && condition && categoryId && shippingConfigurationId && imageUrls.length > 0 && stock > 0);
 
   await prisma.confirmedListing.upsert({
     where: { productId },
@@ -214,10 +204,6 @@ function parseLines(value: string) {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
-}
-
-function isExternalUrl(value: string) {
-  return value.startsWith("http://") || value.startsWith("https://");
 }
 
 function toJsonValue(value: unknown): Prisma.InputJsonValue {

@@ -18,10 +18,6 @@ export function confirmedListingToMercariInput(listing: ConfirmedListing): Merca
     throw new Error("At least one image URL is required before submission.");
   }
 
-  if (!imageUrls.every((url) => url.startsWith("http://") || url.startsWith("https://"))) {
-    throw new Error("Mercari Shops submission requires externally accessible image URLs.");
-  }
-
   return {
     title: listing.title,
     description: listing.description,
